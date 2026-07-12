@@ -1,16 +1,36 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+} from "react-router-dom";
 
 import LoginPage from "../modules/auth/pages/LoginPage";
+import ProtectedRoute from "./ProtectedRoute";
+import DashboardLayout from "../layouts/DashboardLayout";
+import DashboardPage from "../modules/dashboard/pages/dashboardPage";
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/login"
-          element={<LoginPage />}
-        />
-      </Routes>
+  {/* Public */}
+  <Route path="/login" element={<LoginPage />} />
+
+  {/* Protected */}
+  <Route element={<ProtectedRoute />}>
+    <Route element={<DashboardLayout />}>
+      <Route
+        path="/dashboard"
+        element={<DashboardPage />}
+      />
+
+      {/* We'll add these later */}
+      <Route path="/products" element={<div>Products</div>} />
+      <Route path="/stores" element={<div>Stores</div>} />
+      <Route path="/stocks" element={<div>Stocks</div>} />
+    </Route>
+  </Route>
+</Routes>
     </BrowserRouter>
   );
 };
