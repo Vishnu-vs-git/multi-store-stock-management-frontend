@@ -52,10 +52,13 @@ export const AuthProvider = ({
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
+useEffect(() => {
+  if (window.location.pathname !== "/login") {
     void loadUser();
-  }, [loadUser]);
+  } else {
+    setLoading(false);
+  }
+}, [loadUser]);
 
   const login = async (
     data: LoginRequest
@@ -69,13 +72,15 @@ export const AuthProvider = ({
 
     return response.data;
   };
-
-  const logout = async () => {
+const logout = async () => {
+  try {
     await authService.logout();
-
+  } finally {
     setUser(null);
     localStorage.removeItem("user");
-  };
+    window.location.href = "/login";
+  }
+};
 
   return (
     <AuthContext.Provider
