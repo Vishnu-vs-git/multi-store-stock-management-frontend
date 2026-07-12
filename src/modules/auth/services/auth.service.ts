@@ -1,7 +1,7 @@
 
 
 import { api } from "../../../api/axios";
-import type { AuthResponse, LoginRequest } from "../types/auth.types";
+import type { AuthResponse, LoginRequest, User } from "../types/auth.types";
 
 class AuthService {
   async login(data: LoginRequest): Promise<AuthResponse> {
@@ -12,7 +12,15 @@ class AuthService {
 
     return response.data;
   }
+ async getCurrentUser() {
+    const response = await api.get<{
+      success: boolean;
+      message: string;
+      data: User;
+    }>("/auth/me");
 
+    return response.data;
+  }
   async logout() {
     const response = await api.post("/auth/logout");
 
