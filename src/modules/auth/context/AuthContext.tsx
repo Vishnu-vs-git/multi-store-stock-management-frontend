@@ -14,7 +14,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   isAuthenticated: boolean;
-  login: (data: LoginRequest) => Promise<void>;
+  login: (data: LoginRequest) => Promise<User>;
   logout: () => Promise<void>;
   loadUser: () => Promise<void>;
 }
@@ -30,33 +30,51 @@ interface AuthProviderProps {
 export const AuthProvider = ({
   children,
 }: AuthProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
- const loadUser = useCallback(async () => {
-  try {
-    const response = await authService.getCurrentUser();
-    setUser(response.data);
-  } catch {
-    setUser(null);
-  } finally {
-    setLoading(false);
-  }
-}, []);
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem("user");
+    try {
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [loading, setLoading] = useState(!localStorage.getItem("user"));
+
+  const loadUser = useCallback(async () => {
+    try {
+      const response = await authService.getCurrentUser();
+      setUser(response.data);
+      localStorage.setItem("user", JSON.stringify(response.data));
+    } catch {
+      setUser(null);
+      localStorage.removeItem("user");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     void loadUser();
   }, [loadUser]);
 
-  const login = async (data: LoginRequest) => {
+  const login = async (
+    data: LoginRequest
+  ): Promise<User> => {
     await authService.login(data);
 
-    await loadUser();
+    const response = await authService.getCurrentUser();
+
+    setUser(response.data);
+    localStorage.setItem("user", JSON.stringify(response.data));
+
+    return response.data;
   };
 
   const logout = async () => {
     await authService.logout();
 
     setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (

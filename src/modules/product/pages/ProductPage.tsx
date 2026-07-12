@@ -9,8 +9,13 @@ import type { ProductFormData } from "../validators/product.schema";
 import ProductTable from "../components/ProductTable";
 import type { Product } from "../types/product.types";
 
+interface ProductPageProps {
+  readOnly?: boolean;
+}
 
-const ProductPage = () => {
+const ProductPage = ({
+  readOnly = false,
+}: ProductPageProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 const [loading, setLoading] = useState(false);
@@ -66,14 +71,15 @@ const [loading, setLoading] = useState(false);
             Manage your products
           </p>
         </div>
-
-        <button
-          onClick={() => setIsOpen(true)}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
-        >
-          <Plus size={18} />
-          Add Product
-        </button>
+{!readOnly && (
+  <button
+    onClick={() => setIsOpen(true)}
+    className="flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-white hover:bg-blue-700"
+  >
+    <Plus size={18} />
+    Add Product
+  </button>
+)}
       </div>
 
      <div className="rounded-xl bg-white p-6 shadow-sm">

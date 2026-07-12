@@ -7,12 +7,14 @@ import {
   loginSchema,
   type LoginFormData,
 } from "../validators/login.schema";
-import { authService } from "../services/auth.service";
+
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
 const navigate = useNavigate();
   const {
     register,
@@ -25,20 +27,22 @@ const onSubmit = async (
   data: LoginFormData
 ): Promise<void> => {
   try {
-    const response = await authService.login(data);
+    const loggedInUser = await login(data);
 
-    toast.success(response.message);
+    toast.success("Login successful");
 
-    console.log(response.data);
-
+    if (loggedInUser.role === "admin") {
       navigate("/dashboard");
+    } else {
+      navigate("/shop/products");
+    }
   } catch (error: any) {
     toast.error(
-      error.response?.data?.message || "Login failed"
+      error.response?.data?.message ??
+        "Login failed"
     );
   }
 };
-
   return (
     <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
       <div className="mb-8 text-center">
