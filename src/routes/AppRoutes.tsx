@@ -8,6 +8,7 @@ import LoginPage from "../modules/auth/pages/LoginPage";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardPage from "../modules/dashboard/pages/dashboardPage";
+import ProductPage from "../modules/product/pages/ProductPage";
 
 const AppRoutes = () => {
   return (
@@ -25,7 +26,7 @@ const AppRoutes = () => {
       />
 
       {/* We'll add these later */}
-      <Route path="/products" element={<div>Products</div>} />
+      <Route path="/products" element={<ProductPage/>} />
       <Route path="/stores" element={<div>Stores</div>} />
       <Route path="/stocks" element={<div>Stocks</div>} />
     </Route>

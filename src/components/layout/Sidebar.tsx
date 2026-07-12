@@ -22,11 +22,11 @@ const Sidebar = () => {
           icon={LayoutDashboard}
         />
 
-        <SidebarItem
-          title="Products"
-          path="/products"
-          icon={Package}
-        />
+       <SidebarItem
+  title="Products"
+  path="/products"
+  icon={Package}
+/>
 
         <SidebarItem
           title="Stores"
