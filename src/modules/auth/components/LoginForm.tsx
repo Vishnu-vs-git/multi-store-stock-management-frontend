@@ -17,12 +17,22 @@ const LoginForm = () => {
   const { login } = useAuth();
 const navigate = useNavigate();
   const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
+  register,
+  handleSubmit,
+  setValue,
+  formState: { errors, isSubmitting },
+} = useForm<LoginFormData>({
+  resolver: zodResolver(loginSchema),
+});
+const fillAdminCredentials = () => {
+  setValue("email", "vishnu@gmail.com");
+  setValue("password", "admin123");
+};
+
+const fillShopperCredentials = () => {
+  setValue("email", "shopper@example.com");
+  setValue("password", "shopper123");
+};
 const onSubmit = async (
   data: LoginFormData
 ): Promise<void> => {
@@ -59,6 +69,23 @@ const onSubmit = async (
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-6"
       >
+        <div className="mb-6 grid grid-cols-2 gap-3">
+  <button
+    type="button"
+    onClick={fillAdminCredentials}
+    className="rounded-lg border border-blue-600 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 transition hover:bg-blue-100"
+  >
+    Login as Admin
+  </button>
+
+  <button
+    type="button"
+    onClick={fillShopperCredentials}
+    className="rounded-lg border border-green-600 bg-green-50 px-4 py-2 text-sm font-medium text-green-700 transition hover:bg-green-100"
+  >
+    Login as Shopper
+  </button>
+</div>
         {/* Email */}
         <div>
           <label className="mb-2 block text-sm font-medium text-slate-700">
